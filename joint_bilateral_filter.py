@@ -51,3 +51,32 @@ class JointBilateralFilter:
 
         return np.squeeze(filtered) 
 
+
+if __name__ == '__main__':
+    import argparse 
+    parser = argparse.ArgumentParser() 
+    parser.add_argument('-i', required=True) 
+    parser.add_argument('-g', required=True)  
+    parser.add_argument('-o', required=True) 
+    parser.add_argument('-s', type=float, required=True) 
+    parser.add_argument('-c', type=float, required=True) 
+
+    args = parser.parse_args() 
+
+    src = cv2.imread(args.i, flags=cv2.IMREAD_COLOR) / 255 
+    guide = cv2.imread(args.g, flags=cv2.IMREAD_GRAYSCALE) / 255 
+
+    jbf = JointBilateralFilter(sigma_space=args.s, sigma_color=args.c) 
+
+    filtered = jbf.filter(src, guide) 
+
+    output = (filtered * 255).astype(np.uint8) 
+
+    cv2.imwrite(args.o, output) 
+     
+
+
+
+
+
+
